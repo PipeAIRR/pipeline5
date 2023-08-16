@@ -59,7 +59,7 @@ input:
 
 output:
  set val(name), file("*_primers-pass.fastq")  into g38_0_reads0_g_23
- file "MP_*"  into g38_0_logFile1_g38_7
+ file "MP_*"  into g38_0_logFile11
  set val(name), file("*_primers-fail.fastq") optional true  into g38_0_reads_failed2_g39_0
 
 script:
@@ -116,26 +116,6 @@ if(mate=="pair"){
 }
 
 
-process mask_primer_m1s_z_start_4_parse_log_MP {
-
-publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.tab$/) "m1s_z_log_start_4_tab/$filename"}
-input:
- val mate from g_6_mate_g38_7
- file log_file from g38_0_logFile1_g38_7
-
-output:
- file "*.tab"  into g38_7_logFile00
-
-script:
-readArray = log_file.toString()	
-
-"""
-ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
-"""
-
-}
-
-
 process mask_primer_m1s_z_start_5_Mask_M1S_and_Z_primers {
 
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*_primers-pass.fastq$/) "m1s_z_start_5_pass/$filename"}
@@ -147,7 +127,7 @@ input:
 
 output:
  set val(name), file("*_primers-pass.fastq")  into g39_0_reads0_g_23
- file "MP_*"  into g39_0_logFile1_g39_7
+ file "MP_*"  into g39_0_logFile11
  set val(name), file("*_primers-fail.fastq") optional true  into g39_0_reads_failed2_g1_0
 
 script:
@@ -215,7 +195,7 @@ input:
 
 output:
  set val(name), file("*_primers-pass.fastq")  into g1_0_reads0_g_23
- file "MP_*"  into g1_0_logFile1_g1_7
+ file "MP_*"  into g1_0_logFile11
  set val(name), file("*_primers-fail.fastq") optional true  into g1_0_reads_failed2_g13_0
 
 script:
@@ -284,7 +264,7 @@ input:
 
 output:
  set val(name), file("*_primers-pass.fastq")  into g13_0_reads0_g_23
- file "MP_*"  into g13_0_logFile1_g13_7
+ file "MP_*"  into g13_0_logFile11
  set val(name), file("*_primers-fail.fastq") optional true  into g13_0_reads_failed22
 
 script:
@@ -341,46 +321,6 @@ if(mate=="pair"){
 }
 
 
-process mask_primer_m1s_z_align_parse_log_MP {
-
-publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.tab$/) "m1s_z_log_align_tab/$filename"}
-input:
- val mate from g_6_mate_g13_7
- file log_file from g13_0_logFile1_g13_7
-
-output:
- file "*.tab"  into g13_7_logFile00
-
-script:
-readArray = log_file.toString()	
-
-"""
-ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
-"""
-
-}
-
-
-process mask_primer_m1s_z_start_6_parse_log_MP {
-
-publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.tab$/) "m1s_z_log_start_6_tab/$filename"}
-input:
- val mate from g_6_mate_g1_7
- file log_file from g1_0_logFile1_g1_7
-
-output:
- file "*.tab"  into g1_7_logFile00
-
-script:
-readArray = log_file.toString()	
-
-"""
-ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
-"""
-
-}
-
-
 process create_m1s_z_reads {
 
 input:
@@ -420,7 +360,7 @@ input:
 
 output:
  set val(name), file("*_primers-pass.fastq")  into g35_5_reads00
- file "MP_*"  into g35_5_logFile1_g35_9
+ file "MP_*"  into g35_5_logFile11
  set val(name), file("*_primers-fail.fastq") optional true  into g35_5_reads_failed22
 
 script:
@@ -529,26 +469,6 @@ if(mate=="pair"){
 }
 
 
-process Mask_Primer_parse_log_MP {
-
-publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.tab$/) "MP_umi_log_tab/$filename"}
-input:
- val mate from g_6_mate_g35_9
- file log_file from g35_5_logFile1_g35_9
-
-output:
- file "*.tab"  into g35_9_logFile00
-
-script:
-readArray = log_file.toString()	
-
-"""
-ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
-"""
-
-}
-
-
 process PairAwk {
 
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /reads\/.*q$/) "reads_m1s_z/$filename"}
@@ -624,15 +544,85 @@ done
 }
 
 
-process mask_primer_m1s_z_start_5_parse_log_MP {
+process mask_primer_m1s_z_start_6_parse_log_MP {
 
-publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.tab$/) "m1s_z_log_start_5_tab/$filename"}
 input:
- val mate from g_6_mate_g39_7
- file log_file from g39_0_logFile1_g39_7
+ val mate from g_6_mate_g1_7
 
 output:
- file "*.tab"  into g39_7_logFile00
+ set val(name), file("*.tab")  into g1_7_logFile00
+
+script:
+readArray = log_file.toString()	
+
+"""
+ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
+"""
+
+}
+
+
+process mask_primer_m1s_z_align_parse_log_MP {
+
+input:
+ val mate from g_6_mate_g13_7
+
+output:
+ set val(name), file("*.tab")  into g13_7_logFile00
+
+script:
+readArray = log_file.toString()	
+
+"""
+ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
+"""
+
+}
+
+
+process Mask_Primer_parse_log_MP {
+
+input:
+ val mate from g_6_mate_g35_9
+
+output:
+ set val(name), file("*.tab")  into g35_9_logFile00
+
+script:
+readArray = log_file.toString()	
+
+"""
+ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
+"""
+
+}
+
+
+process mask_primer_m1s_z_start_4_parse_log_MP {
+
+input:
+ val mate from g_6_mate_g38_7
+
+output:
+ set val(name), file("*.tab")  into g38_7_logFile00
+
+script:
+readArray = log_file.toString()	
+
+"""
+ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
+"""
+
+}
+
+
+process mask_primer_m1s_z_start_5_parse_log_MP {
+
+input:
+ val mate from g_6_mate_g39_7
+
+output:
+ set val(name), file("*.tab")  into g39_7_logFile00
 
 script:
 readArray = log_file.toString()	
