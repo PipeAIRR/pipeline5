@@ -13,32 +13,32 @@ if (!params.smartNNNA_2){params.smartNNNA_2 = ""}
 ch_empty_file_1 = file("$baseDir/.emptyfiles/NO_FILE_1", hidden:true)
 ch_empty_file_2 = file("$baseDir/.emptyfiles/NO_FILE_2", hidden:true)
 
-g_3_primerSets_g0_0 = file(params.primerSet, type: 'any')
-g_4_sample_file_g0_0 = file(params.samples_file, type: 'any')
-Channel.value(params.mate).into{g_6_mate_g_28;g_6_mate_g1_0;g_6_mate_g1_7;g_6_mate_g13_0;g_6_mate_g13_7;g_6_mate_g35_5;g_6_mate_g35_9;g_6_mate_g38_0;g_6_mate_g38_7;g_6_mate_g39_0;g_6_mate_g39_7}
+g_3_0_g0_0 = file(params.primerSet, type: 'any')
+g_4_1_g0_0 = file(params.samples_file, type: 'any')
+Channel.value(params.mate).into{g_6_2_g_28;g_6_1_g1_0;g_6_0_g1_7;g_6_1_g13_0;g_6_0_g13_7;g_6_3_g35_5;g_6_0_g35_9;g_6_1_g38_0;g_6_0_g38_7;g_6_1_g39_0;g_6_0_g39_7}
 if (params.reads){
 Channel
 	.fromFilePairs( params.reads , size: params.mate == "single" ? 1 : params.mate == "pair" ? 2 : params.mate == "triple" ? 3 : params.mate == "quadruple" ? 4 : -1 )
 	.ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
-	.set{g_7_reads_g38_0}
+	.set{g_7_0_g38_0}
  } else {  
-	g_7_reads_g38_0 = Channel.empty()
+	g_7_0_g38_0 = Channel.empty()
  }
 
-g_25_vprimers_g35_5 = params.smartNNNA_1 && file(params.smartNNNA_1, type: 'any').exists() ? file(params.smartNNNA_1, type: 'any') : ch_empty_file_2
-g_29_PAIRAWK_script_g_28 = file(params.pairawk_bc_script, type: 'any')
-g_30_cprimers_g35_5 = params.smartNNNA_2 && file(params.smartNNNA_2, type: 'any').exists() ? file(params.smartNNNA_2, type: 'any') : ch_empty_file_1
+g_25_2_g35_5 = params.smartNNNA_1 && file(params.smartNNNA_1, type: 'any').exists() ? file(params.smartNNNA_1, type: 'any') : ch_empty_file_2
+g_29_3_g_28 = file(params.pairawk_bc_script, type: 'any')
+g_30_1_g35_5 = params.smartNNNA_2 && file(params.smartNNNA_2, type: 'any').exists() ? file(params.smartNNNA_2, type: 'any') : ch_empty_file_1
 
 
 process generate_barcode_file_generate_barcode_file {
 
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /Barcode_M1S_Z.fasta$/) "barcode_file/$filename"}
 input:
- file primer_set from g_3_primerSets_g0_0
- file sample_file from g_4_sample_file_g0_0
+ file primer_set from g_3_0_g0_0
+ file sample_file from g_4_1_g0_0
 
 output:
- file "Barcode_M1S_Z.fasta"  into g0_0_fasta_file0_g13_0, g0_0_fasta_file0_g1_0, g0_0_fasta_file0_g38_0, g0_0_fasta_file0_g39_0
+ file "Barcode_M1S_Z.fasta"  into g0_0_fasta_file02_g13_0, g0_0_fasta_file02_g1_0, g0_0_fasta_file02_g38_0, g0_0_fasta_file02_g39_0
 
 shell:
 	
@@ -53,14 +53,14 @@ process mask_primer_m1s_z_start_4_Mask_M1S_and_Z_primers {
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*_primers-pass.fastq$/) "m1s_z_start_4_pass/$filename"}
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /MP_.*$/) "MP_log_start_4/$filename"}
 input:
- set val(name),  file(reads) from g_7_reads_g38_0
- val mate from g_6_mate_g38_0
- file primers from g0_0_fasta_file0_g38_0
+ set val(name),  file(reads) from g_7_0_g38_0
+ val mate from g_6_1_g38_0
+ file primers from g0_0_fasta_file02_g38_0
 
 output:
- set val(name), file("*_primers-pass.fastq")  into g38_0_reads0_g_23
+ set val(name), file("*_primers-pass.fastq")  into g38_0_reads00_g_23
  file "MP_*"  into g38_0_logFile11
- set val(name), file("*_primers-fail.fastq") optional true  into g38_0_reads_failed2_g39_0
+ set val(name), file("*_primers-fail.fastq") optional true  into g38_0_reads_failed20_g39_0
 
 script:
 method = params.mask_primer_m1s_z_start_4_Mask_M1S_and_Z_primers.method
@@ -121,14 +121,14 @@ process mask_primer_m1s_z_start_5_Mask_M1S_and_Z_primers {
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*_primers-pass.fastq$/) "m1s_z_start_5_pass/$filename"}
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /MP_.*$/) "MP_log_start_5/$filename"}
 input:
- set val(name),  file(reads) from g38_0_reads_failed2_g39_0
- val mate from g_6_mate_g39_0
- file primers from g0_0_fasta_file0_g39_0
+ set val(name),  file(reads) from g38_0_reads_failed20_g39_0
+ val mate from g_6_1_g39_0
+ file primers from g0_0_fasta_file02_g39_0
 
 output:
- set val(name), file("*_primers-pass.fastq")  into g39_0_reads0_g_23
+ set val(name), file("*_primers-pass.fastq")  into g39_0_reads01_g_23
  file "MP_*"  into g39_0_logFile11
- set val(name), file("*_primers-fail.fastq") optional true  into g39_0_reads_failed2_g1_0
+ set val(name), file("*_primers-fail.fastq") optional true  into g39_0_reads_failed20_g1_0
 
 script:
 method = params.mask_primer_m1s_z_start_5_Mask_M1S_and_Z_primers.method
@@ -189,14 +189,14 @@ process mask_primer_m1s_z_start_6_Mask_M1S_and_Z_primers {
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*_primers-pass.fastq$/) "m1s_z_start_6_pass/$filename"}
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /MP_.*$/) "MP_log_start_6/$filename"}
 input:
- set val(name),  file(reads) from g39_0_reads_failed2_g1_0
- val mate from g_6_mate_g1_0
- file primers from g0_0_fasta_file0_g1_0
+ set val(name),  file(reads) from g39_0_reads_failed20_g1_0
+ val mate from g_6_1_g1_0
+ file primers from g0_0_fasta_file02_g1_0
 
 output:
- set val(name), file("*_primers-pass.fastq")  into g1_0_reads0_g_23
+ set val(name), file("*_primers-pass.fastq")  into g1_0_reads02_g_23
  file "MP_*"  into g1_0_logFile11
- set val(name), file("*_primers-fail.fastq") optional true  into g1_0_reads_failed2_g13_0
+ set val(name), file("*_primers-fail.fastq") optional true  into g1_0_reads_failed20_g13_0
 
 script:
 method = params.mask_primer_m1s_z_start_6_Mask_M1S_and_Z_primers.method
@@ -258,12 +258,12 @@ publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /MP_.*$/) "MP_log_align/$filename"}
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*_primers-fail.fastq$/) "m1s_z_align_failed/$filename"}
 input:
- set val(name),  file(reads) from g1_0_reads_failed2_g13_0
- val mate from g_6_mate_g13_0
- file primers from g0_0_fasta_file0_g13_0
+ set val(name),  file(reads) from g1_0_reads_failed20_g13_0
+ val mate from g_6_1_g13_0
+ file primers from g0_0_fasta_file02_g13_0
 
 output:
- set val(name), file("*_primers-pass.fastq")  into g13_0_reads0_g_23
+ set val(name), file("*_primers-pass.fastq")  into g13_0_reads03_g_23
  file "MP_*"  into g13_0_logFile11
  set val(name), file("*_primers-fail.fastq") optional true  into g13_0_reads_failed22
 
@@ -324,14 +324,14 @@ if(mate=="pair"){
 process create_m1s_z_reads {
 
 input:
- set val(name), file(read1) from g38_0_reads0_g_23
- set val(name), file(read2) from g39_0_reads0_g_23
- set val(name), file(read3) from g1_0_reads0_g_23
- set val(name), file(read4) from g13_0_reads0_g_23
+ set val(name), file(read1) from g38_0_reads00_g_23
+ set val(name), file(read2) from g39_0_reads01_g_23
+ set val(name), file(read3) from g1_0_reads02_g_23
+ set val(name), file(read4) from g13_0_reads03_g_23
 
 output:
- set val("M1S"), file("*_M1S.fastq")  into g_23_reads_m1s0_g_28, g_23_reads_m1s0_g35_5
- set val("Z"), file("*_Z.fastq")  into g_23_reads_z1_g_28
+ set val("M1S"), file("*_M1S.fastq")  into g_23_reads_m1s00_g_28, g_23_reads_m1s00_g35_5
+ set val("Z"), file("*_Z.fastq")  into g_23_reads_z11_g_28
 
 script:
 reads = read1 + read2 + read3 + read4
@@ -353,10 +353,10 @@ process Mask_Primer_mask_primers {
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*_primers-pass.fastq$/) "reads_m1s_umi/$filename"}
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /MP_.*$/) "MP_log_m1s_umi/$filename"}
 input:
- set val(name),  file(reads) from g_23_reads_m1s0_g35_5
- file cprimers from g_30_cprimers_g35_5
- file vprimers from g_25_vprimers_g35_5
- val mate from g_6_mate_g35_5
+ set val(name),  file(reads) from g_23_reads_m1s00_g35_5
+ file cprimers from g_30_1_g35_5
+ file vprimers from g_25_2_g35_5
+ val mate from g_6_3_g35_5
 
 output:
  set val(name), file("*_primers-pass.fastq")  into g35_5_reads00
@@ -473,13 +473,13 @@ process PairAwk {
 
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /reads\/.*q$/) "reads_m1s_z/$filename"}
 input:
- set val(name_1), file(reads_1) from g_23_reads_m1s0_g_28
- set val(name_2), file(reads_2) from g_23_reads_z1_g_28
- val mate from g_6_mate_g_28
- file pairawk from g_29_PAIRAWK_script_g_28
+ set val(name_1), file(reads_1) from g_23_reads_m1s00_g_28
+ set val(name_2), file(reads_2) from g_23_reads_z11_g_28
+ val mate from g_6_2_g_28
+ file pairawk from g_29_3_g_28
 
 output:
- set val("M1S_Z"), file("reads/*q")  into g_28_reads0_g_46
+ set val("M1S_Z"), file("reads/*q")  into g_28_reads00_g_46
 
 script:
 
@@ -512,7 +512,7 @@ process split_seq_samples {
 
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /samples\/.*$/) "samples/$filename"}
 input:
- set val(name),file(reads) from g_28_reads0_g_46
+ set val(name),file(reads) from g_28_reads00_g_46
 
 output:
  set val(name), file("samples/*")  into g_46_reads00
@@ -547,7 +547,7 @@ done
 process mask_primer_m1s_z_start_6_parse_log_MP {
 
 input:
- val mate from g_6_mate_g1_7
+ val mate from g_6_0_g1_7
 
 output:
  set val(name), file("*.tab")  into g1_7_logFile00
@@ -565,7 +565,7 @@ ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
 process mask_primer_m1s_z_align_parse_log_MP {
 
 input:
- val mate from g_6_mate_g13_7
+ val mate from g_6_0_g13_7
 
 output:
  set val(name), file("*.tab")  into g13_7_logFile00
@@ -583,7 +583,7 @@ ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
 process Mask_Primer_parse_log_MP {
 
 input:
- val mate from g_6_mate_g35_9
+ val mate from g_6_0_g35_9
 
 output:
  set val(name), file("*.tab")  into g35_9_logFile00
@@ -601,7 +601,7 @@ ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
 process mask_primer_m1s_z_start_4_parse_log_MP {
 
 input:
- val mate from g_6_mate_g38_7
+ val mate from g_6_0_g38_7
 
 output:
  set val(name), file("*.tab")  into g38_7_logFile00
@@ -619,7 +619,7 @@ ParseLog.py -l ${readArray}  -f ID PRIMER BARCODE ERROR
 process mask_primer_m1s_z_start_5_parse_log_MP {
 
 input:
- val mate from g_6_mate_g39_7
+ val mate from g_6_0_g39_7
 
 output:
  set val(name), file("*.tab")  into g39_7_logFile00
